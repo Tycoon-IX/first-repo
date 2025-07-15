@@ -1,0 +1,12 @@
+{
+    "saldo": 277777777777.0,
+    "pemasukan": [
+        {
+            "jumlah": 277777777777.0,
+            "sumber": "gaji",
+            "tanggal": "09/06/2025 11:26"
+        }
+    ],
+    "pengeluaran": [],
+    "kategori_pengeluaran": {}
+}

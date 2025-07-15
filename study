@@ -1,0 +1,4 @@
+fruits = ["apple", "banana", "cherry"]
+
+#print(dir(fruits)) # Menampilkan semua atribut dan metode yang tersedia pada objek fruits
+print(help(fruits))  # Menampilkan dokumentasi lengkap tentang objek fruits 
