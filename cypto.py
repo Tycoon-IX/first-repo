@@ -22,7 +22,7 @@ def reset():
     Fungsi untuk mereset/mengosongkan semua input:
     - Mengosongkan area pesan
     - Mengosongkan field password
-    - Mengembalikan status ke 'Ready'
+    - Mengembalika n status ke 'Ready'
     """
     text1.delete("1.0", END)       # Hapus semua teks di text area
     code.set("")                   # Kosongkan password
