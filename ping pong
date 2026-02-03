@@ -1,0 +1,105 @@
+import pygame
+import sys
+
+# Constants
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+COLOR_BLACK = (0, 0, 0)
+COLOR_WHITE = (255, 255, 255)
+PADDLE_WIDTH = 15
+PADDLE_HEIGHT = 100
+BALL_SIZE = 15
+FPS = 60
+
+def main():
+    # GAME SETUP
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Pong")
+    clock = pygame.time.Clock()
+    
+    # Initialize game objects
+    player1 = pygame.Rect(50, SCREEN_HEIGHT//2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT)
+    player2 = pygame.Rect(SCREEN_WIDTH - 50 - PADDLE_WIDTH, SCREEN_HEIGHT//2 - PADDLE_HEIGHT//2, PADDLE_WIDTH, PADDLE_HEIGHT)
+    ball = pygame.Rect(SCREEN_WIDTH//2 - BALL_SIZE//2, SCREEN_HEIGHT//2 - BALL_SIZE//2, BALL_SIZE, BALL_SIZE)
+    
+    ball_speed_x = 7
+    ball_speed_y = 7
+    player1_speed = 0
+    player2_speed = 0
+    paddle_speed = 7
+    
+    # GAME LOOP
+    while True:
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            # Keyboard input
+            if event.type == pygame.KEYDOWN:
+                # Player 1 controls (W/S keys)
+                if event.key == pygame.K_w:
+                    player1_speed = -paddle_speed
+                if event.key == pygame.K_s:
+                    player1_speed = paddle_speed
+                
+                # Player 2 controls (Up/Down arrow keys)
+                if event.key == pygame.K_UP:
+                    player2_speed = -paddle_speed
+                if event.key == pygame.K_DOWN:
+                    player2_speed = paddle_speed
+            
+            if event.type == pygame.KEYUP:
+                if event.key in (pygame.K_w, pygame.K_s):
+                    player1_speed = 0
+                if event.key in (pygame.K_UP, pygame.K_DOWN):
+                    player2_speed = 0
+        
+        # Update game objects
+        # Move paddles
+        player1.y += player1_speed
+        player2.y += player2_speed
+        
+        # Keep paddles on screen
+        player1.y = max(0, min(player1.y, SCREEN_HEIGHT - PADDLE_HEIGHT))
+        player2.y = max(0, min(player2.y, SCREEN_HEIGHT - PADDLE_HEIGHT))
+        
+        # Move ball
+        ball.x += ball_speed_x
+        ball.y += ball_speed_y
+        
+        # Ball collision with top/bottom
+        if ball.top <= 0 or ball.bottom >= SCREEN_HEIGHT:
+            ball_speed_y *= -1
+        
+        # Ball collision with paddles
+        if ball.colliderect(player1) or ball.colliderect(player2):
+            ball_speed_x *= -1
+            # Add some randomness to the bounce
+            ball_speed_y += 0.5 if ball_speed_y > 0 else -0.5
+        
+        # Ball out of bounds (reset)
+        if ball.left <= 0 or ball.right >= SCREEN_WIDTH:
+            ball.center = (SCREEN_WIDTH//2, SCREEN_HEIGHT//2)
+            ball_speed_x *= -1
+        
+        # Drawing
+        screen.fill(COLOR_BLACK)
+        
+        # Draw center line
+        for i in range(0, SCREEN_HEIGHT, 30):
+            pygame.draw.rect(screen, COLOR_WHITE, (SCREEN_WIDTH//2 - 2, i, 4, 15))
+        
+        # Draw paddles and ball
+        pygame.draw.rect(screen, COLOR_WHITE, player1)
+        pygame.draw.rect(screen, COLOR_WHITE, player2)
+        pygame.draw.ellipse(screen, COLOR_WHITE, ball)
+        
+        # Update display
+        pygame.display.flip()
+        clock.tick(FPS)
+
+if __name__ == "__main__":
+    main()
